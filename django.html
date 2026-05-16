@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Django</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+      color: #ffffff;
+      min-height: 100vh;
+      background: #0a0a0a;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      background-image: url("Django hintergrund.JPG");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.55) 0%,
+        rgba(0, 0, 0, 0.45) 50%,
+        rgba(0, 0, 0, 0.75) 100%
+      );
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .lang-switch {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 100;
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .lang-btn {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: rgba(255, 255, 255, 0.7);
+      padding: 0.35rem 0.85rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.25s;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .lang-btn.active {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.7);
+      color: #ffffff;
+    }
+
+    .lang-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+
+    .hero-name {
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 3vw, 1.4rem);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.65);
+      font-style: italic;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-weight: 300;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.9; }
+    }
+
+    .content {
+      background: #0d0d0d;
+      padding: 5rem 2rem;
+    }
+
+    .content-inner {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .bio {
+      font-size: 1.05rem;
+      line-height: 1.95;
+      color: #d4d0c8;
+      margin-bottom: 4rem;
+    }
+
+    .bio p {
+      margin-bottom: 1.4rem;
+    }
+
+    .bio p:last-child {
+      margin-bottom: 0;
+    }
+
+    .bio .highlight {
+      color: #ffffff;
+      font-style: italic;
+    }
+
+    .gallery-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      margin-bottom: 5rem;
+    }
+
+    @media (max-width: 560px) {
+      .gallery {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .gallery-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      max-height: 320px;
+      object-fit: contain;
+      background: transparent;
+      filter: drop-shadow(0 4px 24px rgba(0,0,0,0.6));
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+
+    .gallery-item img.freigestellt {
+      background: transparent;
+      filter: brightness(1) contrast(1) drop-shadow(0 4px 24px rgba(0,0,0,0.6));
+    }
+
+    .gallery-item img:hover {
+      transform: scale(1.03);
+      filter: drop-shadow(0 8px 32px rgba(0,0,0,0.8));
+    }
+
+    .gallery-item img.freigestellt:hover {
+      transform: scale(1.03);
+      filter: brightness(1) contrast(1) drop-shadow(0 8px 32px rgba(0,0,0,0.8));
+    }
+
+    .gallery-caption {
+      font-size: 0.82rem;
+      letter-spacing: 0.1em;
+      color: #888;
+      text-align: center;
+      text-transform: uppercase;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #1e1e1e;
+      margin: 3rem 0;
+    }
+
+    [lang-content] {
+      display: none;
+    }
+
+    [lang-content].visible {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="lang-switch">
+    <button class="lang-btn active" onclick="setLang('de')">DE</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+  </div>
+
+  <div class="hero">
+    <div class="hero-content">
+      <h1 class="hero-name">Django</h1>
+      <p class="hero-subtitle" id="hero-sub-de">Dackel &middot; Legende</p>
+      <p class="hero-subtitle" id="hero-sub-en" style="display:none;">Dachshund &middot; Legend</p>
+    </div>
+    <p class="scroll-hint">&#8595;</p>
+  </div>
+
+  <div class="content">
+    <div class="content-inner">
+
+      <!-- Deutsch -->
+      <div lang-content="de" class="visible">
+        <div class="bio">
+          <p><span class="highlight">Ich bin Django. Dackel. Legende. Und ja, ich weiß es.</span></p>
+          <p>Drei Jahre jung, saufarben und mit einem Herz so groß wie meine Ohren. Meine Mama und mein Papa sind meine absoluten Lieblingsmenschen auf der ganzen Welt. Ich liebe sie abgöttisch, bedingungslos und von ganzem Herzen. Aber hand aufs Herz: Für einen Tennisball würde ich die beiden sofort verkaufen. Ohne zu zögern. Ohne schlechtes Gewissen. Der Ball ruft.</p>
+          <p>Meine kleine Freundin Annika ist total vernarrt in mich. Ehrlich gesagt kann ich es ihr nicht verdenken.</p>
+          <p>In der Hundeschule bin ich bekannt als der Sheriff des Platzes. Ja, ich bin vielleicht der Kleinste, aber garantiert der Lauteste und Überzeugendste. Jemand muss hier schließlich für Ordnung sorgen.</p>
+          <p>Nach einem harten Tag als Sheriff kuschle ich mich am liebsten ein. Und am Wochenende gehe ich mit meinen Freunden golfen. 18 Loch, frische Luft, gute Gesellschaft. Das Leben könnte nicht besser sein.</p>
+          <p>Aber abends, wenn ich mich zwischen Mama und Papa einkuschle, weiß ich: Einen besseren Deal hätte ich nirgendwo gemacht. Na gut. Vielleicht behalte ich die beiden doch.</p>
+        </div>
+      </div>
+
+      <!-- English -->
+      <div lang-content="en">
+        <div class="bio">
+          <p><span class="highlight">I am Django. Dachshund. Legend. And yes, I know it.</span></p>
+          <p>Three years young, wild boar colored and with a heart as big as my ears. My mom and my dad are my absolute favorite people in the entire world. I love them deeply, unconditionally and wholeheartedly. But let's be honest: for a tennis ball I would sell them both without hesitation. No regrets. No second thoughts. The ball calls.</p>
+          <p>My little friend Annika is completely crazy about me. Honestly, I can't blame her.</p>
+          <p>At dog school I am known as the Sheriff of the yard. Yes, I may be the smallest, but I am definitely the loudest and most convincing. Someone has to keep order around here.</p>
+          <p>After a hard day as Sheriff, my favorite thing is to curl up and cuddle. And on weekends I go golfing with my friends. 18 holes, fresh air, great company. Life couldn't be better.</p>
+          <p>But in the evenings, when I snuggle up between mom and dad, I know: I couldn't have made a better deal anywhere. Alright. Maybe I'll keep them after all.</p>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Gallery (language-independent) -->
+      <p class="gallery-title" id="gallery-label-de">Meine Welt</p>
+      <p class="gallery-title" id="gallery-label-en" style="display:none;">My World</p>
+
+      <div class="gallery">
+        <div class="gallery-item">
+          <img src="Dango_und_Anika_freigestellt-removebg-preview.png" alt="Django und Anika" class="freigestellt" />
+          <p class="gallery-caption">Django &amp; Anika</p>
+        </div>
+        <div class="gallery-item">
+          <img src="DJAngo_und_Daddy_freigestellt-removebg-preview.png" alt="Django und Daddy" class="freigestellt" />
+          <p class="gallery-caption">Django &amp; Daddy</p>
+        </div>
+        <div class="gallery-item">
+          <img src="Django_und_Elisabeth_freigestellt-removebg-preview.png" alt="Django und Elisabeth" class="freigestellt" />
+          <p class="gallery-caption">Django &amp; Mommy</p>
+        </div>
+        <div class="gallery-item">
+          <img src="Django mit Spiky optimiert.PNG" alt="Django und Spikey am Golfplatz" />
+          <p class="gallery-caption">Django &amp; Spikey am Golfplatz</p>
+        </div>
+        <div class="gallery-item">
+          <img src="Django_Freigestellt_1-removebg-preview.png" alt="Django" class="freigestellt" />
+          <p class="gallery-caption">Django</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function setLang(lang) {
+      document.querySelectorAll('[lang-content]').forEach(el => {
+        el.classList.toggle('visible', el.getAttribute('lang-content') === lang);
+      });
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
+      });
+      document.documentElement.lang = lang;
+
+      const isDE = lang === 'de';
+      document.getElementById('hero-sub-de').style.display = isDE ? '' : 'none';
+      document.getElementById('hero-sub-en').style.display = isDE ? 'none' : '';
+      document.getElementById('gallery-label-de').style.display = isDE ? '' : 'none';
+      document.getElementById('gallery-label-en').style.display = isDE ? 'none' : '';
+    }
+  </script>
+
+</body>
+</html>
